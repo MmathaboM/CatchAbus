@@ -1,0 +1,46 @@
+MapActivity.java
+import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private GoogleMap mMap;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Get the user's current location and show it on the map
+        LatLng userLocation = getUserLocation();
+        if (userLocation != null) {
+            mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+        } else {
+            Toast.makeText(this, "Unable to get your location.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private LatLng getUserLocation() {
+        // Here, you would implement the code to get the user's location using any location service.
+        // For simplicity, we will return a fixed location (latitude, longitude) in this example.
+        return new LatLng(37.7749, -122.4194); // San Francisco, CA
+    }
+}
